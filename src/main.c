@@ -11,6 +11,7 @@ void explore(struct Triplet* T, int index) {
 	printf("%d: %d %d %d\n", index, curr_edge[0], curr_edge[1], curr_edge[2]);
 
 	int num_row = num_in_row(T, curr_edge[0], index);
+	free(curr_edge);
 
 	if (num_row == 0) { return; }
 
@@ -22,10 +23,10 @@ void explore(struct Triplet* T, int index) {
 }
 
 int main(void) {
-	int nodes = 9;
-	int edges = 16;
+	int nodes = 300;
+	int edges = 592;
 
-	struct Triplet T = read_triplet("../data/nick/clean.csv", nodes, nodes, edges);
+	struct Triplet T = read_triplet("../data/08blocks/clean.csv", nodes, nodes, edges);
 
 	//struct CSR graph = Triplet_to_CSR(&T);
 	//destroy_Triplet(&T);
