@@ -70,6 +70,14 @@ struct Triplet read_triplet(char *filename, int rows, int cols, int numNonZeros)
 	return ret;
 }
 
+int* get_edge(struct Triplet *A, int index) {
+	int* ret = (int *) malloc(sizeof(int) * 3);
+	ret[0] = A->row[index];
+	ret[1] = A->col[index];
+	ret[2] = A->val[index];
+	return ret;
+}
+
 void destroy_Triplet(struct Triplet *A) {
 	free(A->row);
 	free(A->col);

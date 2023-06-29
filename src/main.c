@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 #include "sparse.h"
+#include "queue.h"
 
 int main(void) {
 	int nodes = 29;
@@ -9,13 +10,22 @@ int main(void) {
 
 	struct Triplet T = read_triplet("../data/bn-mouse-cortex/clean.csv", nodes, nodes, edges);
 
-	struct CSR graph = Triplet_to_CSR(&T);
+	//struct CSR graph = Triplet_to_CSR(&T);
+	//destroy_Triplet(&T);
+	//print_CSR(&graph);
 
-	destroy_Triplet(&T);
+	struct Queue Q;
+	init_Queue(&Q, edges);
 
-	print_CSR(&graph);
+	int ones = num_in_row(&Q, &T, T.row[Q.front]);
+	int* first = dequeue(&Q, &T);
+	int twos = num_in_row(&Q, &T, T.row[Q.front]);
+	int* second = dequeue(&Q, &T);
 
-	//for 
+	printf("%d %d %d:\t%d\n", first[0], first[1], first[2], ones);
 
+
+	printf("%d %d %d:\t%d\n", second[0], second[1], second[2], twos);
+	
 	return 0;
 }

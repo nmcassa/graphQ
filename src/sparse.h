@@ -57,6 +57,7 @@ void destroy_CSR(struct CSR *A);
 
 struct Triplet read_triplet(char *filename, int rows, int cols, int numNonZeros);
 void destroy_Triplet(struct Triplet *A);
+int* get_edge(struct Triplet *A, int index);
 
 struct CSR Triplet_to_CSR(struct Triplet *A);
 
