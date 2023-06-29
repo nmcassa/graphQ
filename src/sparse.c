@@ -78,6 +78,24 @@ int* get_edge(struct Triplet *A, int index) {
 	return ret;
 }
 
+int index_first_unexplored(struct Triplet *A) {
+	for (int i = 0; i < A->nz; i++) {
+		if (A->val[i] == 1) {
+			return i;
+		}
+	}
+	return -1;
+}
+
+int find_row_index(struct Triplet* T, int col) {
+	for (int i = 0; i < T->nz; i++) {
+		if (T->row[i] == col) {
+			return i;
+		}
+	}
+	return -1;
+}
+
 void destroy_Triplet(struct Triplet *A) {
 	free(A->row);
 	free(A->col);

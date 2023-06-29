@@ -4,28 +4,44 @@
 #include "sparse.h"
 #include "queue.h"
 
-int main(void) {
-	int nodes = 29;
-	int edges = 43;
+void explore(struct Triplet* T, int index) {
+	int* curr_edge = get_edge(T, index);
 
-	struct Triplet T = read_triplet("../data/bn-mouse-cortex/clean.csv", nodes, nodes, edges);
+	if (curr_edge[2] == 2) { return; }
+	printf("%d: %d %d %d\n", index, curr_edge[0], curr_edge[1], curr_edge[2]);
+
+	int num_row = num_in_row(T, curr_edge[0], index);
+
+	if (num_row == 0) { return; }
+
+	for (int i = 0; i < num_row; i++) {
+		int next_node = find_row_index(T, T->col[i + index]);
+		T->val[i + index] = 2;
+		explore(T, next_node);
+	}
+}
+
+int main(void) {
+	int nodes = 9;
+	int edges = 16;
+
+	struct Triplet T = read_triplet("../data/nick/clean.csv", nodes, nodes, edges);
 
 	//struct CSR graph = Triplet_to_CSR(&T);
 	//destroy_Triplet(&T);
 	//print_CSR(&graph);
 
-	struct Queue Q;
-	init_Queue(&Q, edges);
+	int count = 0;
 
-	int ones = num_in_row(&Q, &T, T.row[Q.front]);
-	int* first = dequeue(&Q, &T);
-	int twos = num_in_row(&Q, &T, T.row[Q.front]);
-	int* second = dequeue(&Q, &T);
+	while (T.nz != 0) {
+		int curr_index = index_first_unexplored(&T);
+		if (curr_index == -1) { break; }
+		explore(&T, curr_index);
+		printf("HERE\n");
+		count++;
+	}
 
-	printf("%d %d %d:\t%d\n", first[0], first[1], first[2], ones);
+	printf("\n\n%d\n", count);
 
-
-	printf("%d %d %d:\t%d\n", second[0], second[1], second[2], twos);
-	
 	return 0;
 }

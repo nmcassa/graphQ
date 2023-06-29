@@ -22,11 +22,13 @@ int is_empty(struct Queue* A) {
 	return 0;
 }
 
-int num_in_row(struct Queue *A, struct Triplet* T, int row) {
+int num_in_row(struct Triplet* T, int row, int index) {
 	int count = 0;
-	for (int i = A->front; i < A->size; i++) {
-		if (T->row[i] == row) {
+	for (int i = index; i < T->nz; i++) {
+		if (T->row[i] == row && T->val[i] == 1) { //unexplored
 			count++;
+		} else {
+			return count;
 		}
 	}
 	return count;
