@@ -27,26 +27,53 @@ struct Triplet read_triplet(const char *filename, int rows, int cols, int numNon
 	return ret;
 }
 
-int index_first_unexplored(struct Triplet *A) {
-	for (int i = 0; i < A->nz; i++) {
-		if (A->val[i] == 1) {
-			return i;
-		}
-	}
-	return -1;
-}
-
-int find_row_index(struct Triplet* T, int col) {
-	for (int i = 0; i < T->nz; i++) {
-		if (T->row[i] == col) {
-			return i;
-		}
-	}
-	return -1;
-}
-
 void destroy_Triplet(struct Triplet *A) {
 	free(A->row);
 	free(A->col);
 	free(A->val);
+}
+
+struct CSR Triplet_to_CSR(struct Triplet *A) {
+	struct CSR ret;
+
+	ret.n = A->n;
+	ret.m = A->m;
+	ret.nz = A->nz;
+
+	ret.rowPtr = (int *) malloc(sizeof(int) * (ret.n + 1));
+	ret.colIndex = (int *) malloc(sizeof(int) * ret.nz);
+	ret.val = (int *) malloc(sizeof(int) * ret.nz);
+
+	int *rowCounter = (int *) malloc(sizeof(int) * ret.n);
+	for (int i = 0; i < ret.n; i++) {
+		rowCounter[i] = 0;
+	}
+
+	for (int i = 0; i < ret.nz; i++) { //number of nonzeros in each row
+		rowCounter[A->row[i]]++;
+	}
+
+	ret.rowPtr[0] = 0;
+	for (int i = 0; i < ret.n; i++) { 
+		ret.rowPtr[i + 1] = ret.rowPtr[i] + rowCounter[i];
+	}
+
+	int currRow;
+	int index;
+	for (int i = 0; i < ret.nz; i++) {
+		currRow = A->row[i];
+		index = ret.rowPtr[currRow]++;
+
+		ret.val[index] = A->val[i];
+		ret.colIndex[index] = A->col[i];
+	}
+
+	for (int i = ret.n; i > 0; i--) {
+		ret.rowPtr[i] = ret.rowPtr[i - 1];
+	}
+	ret.rowPtr[0] = 0;
+
+	free(rowCounter);
+
+	return ret;
 }

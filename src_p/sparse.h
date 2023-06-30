@@ -15,10 +15,18 @@ struct Triplet { //csv:    0, 0, 1   ==   [0, 0] = 1
 	int* row;
 };
 
+struct CSR {
+	int n; //num rows
+	int m; //num cols
+	int nz; //num non-zero
+	
+	int* val; //non-zero values
+	int* colIndex; // column indices
+	int* rowPtr; //row ptrs
+};
+
 struct Triplet read_triplet(const char *filename, int rows, int cols, int numNonZeros);
 void destroy_Triplet(struct Triplet *A);
 
-int find_row_index(struct Triplet* T, int col);
-int index_first_unexplored(struct Triplet *A);
-
+struct CSR Triplet_to_CSR(struct Triplet *A);
 #endif
